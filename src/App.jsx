@@ -10,20 +10,28 @@ import PerformanceTracking from "./components/admin/PerformanceTracking";
 import Approval from "./components/pages/Approval";
 import SubmittedData from "./components/pages/SubmittedData";
 import Sourcing from "./components/pages/Sourcing";
-import SourcingDetails from "./components/pages/SourcingDetails"; // NEW IMPORT
+import SourcingDetails from "./components/pages/SourcingDetails";
 import Submission from "./components/pages/Submission";
 import Execution from "./components/pages/Execution";
 import OrderComplete from "./components/pages/OrderComplete";
+import NotFound from "./components/pages/NotFound";
+import { useUser } from "./context/UserContext";
 import "./styles/App.css";
 
 // Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): 2025-07-26 04:21:57
-// Current User's Login: MFakheem
+// Current User will be managed by Context API now
 
 // Sidebar with updated navigation structure
-const Sidebar = ({ activeSection, onSectionClick, adminDropdown, setAdminDropdown }) => (
-  <nav className="sidebar">
-    <h2>QMS App</h2>
-    <div>
+const Sidebar = ({ activeSection, onSectionClick, adminDropdown, setAdminDropdown }) => {
+  const { user } = useUser();
+  
+  return (
+    <nav className="sidebar">
+      <h2>QMS App</h2>
+      <div className="user-info">
+        <small>Welcome, {user.username}</small>
+      </div>
+      <div>
       <button
         onClick={() => {
           setAdminDropdown(!adminDropdown);
@@ -112,7 +120,8 @@ const Sidebar = ({ activeSection, onSectionClick, adminDropdown, setAdminDropdow
       Order Complete
     </button>
   </nav>
-);
+  );
+};
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -222,11 +231,12 @@ const Layout = () => {
           <Route path="/approval" element={<Approval />} />
           <Route path="/submitted-data" element={<SubmittedData />} />
           <Route path="/sourcing" element={<Sourcing />} />
-          <Route path="/sourcing/:id" element={<SourcingDetails />} /> {/* NEW ROUTE */}
+          <Route path="/sourcing/:id" element={<SourcingDetails />} />
           <Route path="/submission" element={<Submission />} />
           <Route path="/execution" element={<Execution />} />
           <Route path="/order-complete" element={<OrderComplete />} />
           <Route path="/" element={<Qms />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>

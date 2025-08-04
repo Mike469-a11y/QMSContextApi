@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import IndexedDBManager from '../../utils/IndexedDBManager'; // ✅ PDF FIX: Import IndexedDB manager
+import IndexedDBManager from '../../utils/IndexedDBManager.js'; // ✅ PDF FIX: Import IndexedDB manager
 import './../../styles/Approval.css';
 
 // ✅ FIXED: Move RejectionModal OUTSIDE the main component to prevent recreation

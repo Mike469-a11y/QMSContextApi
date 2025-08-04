@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import IndexedDBManager from '../../utils/IndexedDBManager';
+import IndexedDBManager from '../../utils/IndexedDBManager.js';
 import '../../styles/AttachmentManager.css';
 
 const AttachmentManager = memo(({ vendorId, qmsId, onAttachmentsChange }) => {

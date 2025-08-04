@@ -1,72 +1,69 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useQmsEntry } from "../../hooks/useQms.js";
+import { useUser } from "../../context/UserContext.jsx";
+import { LoadingPage } from "../../components/ui/Loading.jsx";
+import { ErrorPage } from "../../components/ui/Error.jsx";
 
 const QmsDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [entry, setEntry] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [dataSource, setDataSource] = useState('');
+    const { user } = useUser();
+    
+    // Use React Query hook for data fetching
+    const { data: entry, isLoading, error, refetch } = useQmsEntry(id);
 
-    const currentDateTime = '2025-07-28 21:45:14';
-    const currentUser = 'MFakheem';
-
-    useEffect(() => {
-        const fetchEntry = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                let foundEntry = null;
-                let source = '';
-
-                // First, try to find in Assignment data (qmsEntries)
-                const assignmentData = localStorage.getItem("qmsEntries");
-                if (assignmentData) {
-                    const assignmentEntries = JSON.parse(assignmentData);
-                    foundEntry = assignmentEntries.find((item) => item.id === id);
-                    if (foundEntry) {
-                        source = 'Assignment';
-                    }
-                }
-
-                // If not found in Assignment, try Sourcing data (sourcingEntries)
-                if (!foundEntry) {
-                    const sourcingData = localStorage.getItem("sourcingEntries");
-                    if (sourcingData) {
-                        const sourcingEntries = JSON.parse(sourcingData);
-                        foundEntry = sourcingEntries.find((item) => item.id === id);
-                        if (foundEntry) {
-                            source = 'Sourcing';
-                        }
-                    }
-                }
-
-                // If still not found, throw error
-                if (!foundEntry) {
-                    throw new Error(`No entry found for QMS ID: ${id} in either Assignment or Sourcing data`);
-                }
-
-                setEntry(foundEntry);
-                setDataSource(source);
-                console.log(`Found entry ${id} in ${source} data:`, foundEntry);
-
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (id) fetchEntry();
-    }, [id]);
+    const currentDateTime = new Date().toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit', 
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    }).replace(/(\d+)\/(\d+)\/(\d+),/, '$3-$1-$2');
 
     const handleBack = () => navigate(-1);
 
     const handleEdit = () => {
         navigate('/', { state: { editEntry: entry } });
     };
+
+    const handleRetry = () => {
+        refetch();
+    };
+
+    const handleGoHome = () => {
+        navigate('/');
+    };
+
+    // Show loading state
+    if (isLoading) {
+        return <LoadingPage text="Loading QMS details..." />;
+    }
+
+    // Show error state
+    if (error) {
+        return (
+            <ErrorPage 
+                error={error}
+                title="Failed to Load QMS Details"
+                onRetry={handleRetry}
+                onGoHome={handleGoHome}
+            />
+        );
+    }
+
+    // Show not found if no entry
+    if (!entry) {
+        return (
+            <ErrorPage 
+                error={`QMS entry with ID "${id}" not found`}
+                title="QMS Entry Not Found"
+                onGoHome={handleGoHome}
+            />
+        );
+    }
 
     const isValidUrl = (string) => {
         try {
@@ -98,54 +95,6 @@ const QmsDetailsPage = () => {
         return { status: 'normal', text: `${daysLeft} days left`, class: 'status-normal' };
     };
 
-    if (loading)
-        return (
-            <div className="qms-detail-loading">
-                <div className="loading-spinner">
-                    <div className="spinner-ring"></div>
-                    <div className="spinner-ring"></div>
-                    <div className="spinner-ring"></div>
-                </div>
-                <h3>Loading QMS Details...</h3>
-                <p>Please wait while we fetch the information</p>
-            </div>
-        );
-
-    if (error)
-        return (
-            <div className="qms-detail-container">
-                <div className="qms-detail-header error-header">
-                    <div className="header-content">
-                        <div className="header-left">
-                            <h1>⚠️ Error Loading Details</h1>
-                            <p>Failed to load QMS entry information</p>
-                        </div>
-                        <div className="header-right">
-                            <div className="user-info">
-                                <span>Current User: <strong>{currentUser}</strong></span>
-                                <span>Date: <strong>{currentDateTime} UTC</strong></span>
-                            </div>
-                            <div className="header-actions">
-                                <button onClick={handleBack} className="btn btn-back">
-                                    ← Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="qms-detail-content">
-                    <div className="error-section">
-                        <div className="error-icon">❌</div>
-                        <h3>Entry Not Found</h3>
-                        <p>{error}</p>
-                        <button onClick={handleBack} className="btn btn-primary">
-                            Go Back
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-
     const dueDateInfo = getDueDateStatus(entry.dueDate);
 
     return (
@@ -158,14 +107,14 @@ const QmsDetailsPage = () => {
                         <h1>QMS Entry Details</h1>
                         <p>Complete information and tracking for this QMS entry</p>
                         <div className="data-source-badge">
-                            <span className={`source-indicator ${dataSource.toLowerCase()}`}>
-                                📂 {dataSource} Section
+                            <span className={`source-indicator ${entry.source.toLowerCase()}`}>
+                                📂 {entry.source} Section
                             </span>
                         </div>
                     </div>
                     <div className="header-right">
                         <div className="user-info">
-                            <span>Current User: <strong>{currentUser}</strong></span>
+                            <span>Current User: <strong>{user.username}</strong></span>
                             <span>Date: <strong>{currentDateTime} UTC</strong></span>
                         </div>
                         <div className="header-actions">
@@ -332,7 +281,7 @@ const QmsDetailsPage = () => {
                                     ) : "N/A"}
                                 </span>
                             </div>
-                            {dataSource === 'Sourcing' && entry.transferredAt && (
+                            {entry.source === 'Sourcing' && entry.transferredAt && (
                                 <div className="detail-item">
                                     <span className="detail-label">Transferred to Sourcing</span>
                                     <span className="detail-value">
@@ -381,7 +330,7 @@ const QmsDetailsPage = () => {
                                     ) : "N/A"}
                                 </span>
                             </div>
-                            {dataSource === 'Sourcing' && (
+                            {entry.source === 'Sourcing' && (
                                 <div className="detail-item">
                                     <span className="detail-label">Assigned By</span>
                                     <span className="detail-value">
