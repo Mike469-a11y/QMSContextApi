@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/OrderComplete.css';
+import '../styles/OrderComplete.css';
 
 const OrderComplete = () => {
     const currentDateTime = '2025-07-25 23:17:32';

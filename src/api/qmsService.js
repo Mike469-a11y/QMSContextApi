@@ -1,5 +1,3 @@
-import api from './client.js';
-
 // QMS Entry related API calls
 export const qmsService = {
   // Get all QMS entries

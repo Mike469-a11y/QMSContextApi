@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import AttachmentManager from '../ui/AttachmentManager';
-import IndexedDBManager from '../../utils/IndexedDBManager.js';
-import '../../styles/SourcingDetails.css';
+import AttachmentManager from '../components/ui/AttachmentManager';
+import IndexedDBManager from '../utils/IndexedDBManager.js';
+import '../styles/SourcingDetails.css';
 
 // Memoized Vendor Form Component for Performance
 const VendorForm = memo(({ vendor, onUpdate, onLineItemUpdate, onAddLineItem, onRemoveLineItem, qmsId }) => {
