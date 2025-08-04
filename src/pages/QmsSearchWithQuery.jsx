@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useQmsEntries } from "../../hooks/useQms.js";
-import { useUser } from "../../context/UserContext.jsx";
-import { LoadingSpinner, LoadingOverlay } from "../ui/Loading.jsx";
-import { ErrorMessage } from "../ui/Error.jsx";
+import { useQmsEntries } from "../hooks/useQms.js";
+import { useUser } from "../context/UserContext.jsx";
+import { LoadingSpinner, LoadingOverlay } from "../components/ui/Loading.jsx";
+import { ErrorMessage } from "../components/ui/Error.jsx";
 
 const QmsSearchWithQuery = () => {
     const navigate = useNavigate();

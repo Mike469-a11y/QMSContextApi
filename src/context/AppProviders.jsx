@@ -1,6 +1,8 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Provider as ReduxProvider } from 'react-redux';
+import { store } from '../store/index.js';
 import { UserProvider } from './UserContext.jsx';
 import { ThemeProvider } from './ThemeContext.jsx';
 
@@ -25,15 +27,17 @@ const queryClient = new QueryClient({
 // Combined Context Provider
 export const AppProviders = ({ children }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <UserProvider>
-          {children}
-          {/* Only show devtools in development */}
-          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-        </UserProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ReduxProvider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <UserProvider>
+            {children}
+            {/* Only show devtools in development */}
+            {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+          </UserProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ReduxProvider>
   );
 };
 

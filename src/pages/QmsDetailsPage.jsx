@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQmsEntry } from "../../hooks/useQms.js";
-import { useUser } from "../../context/UserContext.jsx";
-import { LoadingPage } from "../../components/ui/Loading.jsx";
-import { ErrorPage } from "../../components/ui/Error.jsx";
+import { useQmsEntry } from "../hooks/useQms.js";
+import { useUser } from "../context/UserContext.jsx";
+import { LoadingPage } from "../components/ui/Loading.jsx";
+import { ErrorPage } from "../components/ui/Error.jsx";
 
 const QmsDetailsPage = () => {
     const { id } = useParams();

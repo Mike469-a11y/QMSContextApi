@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import IndexedDBManager from '../../utils/IndexedDBManager.js';
-import '../../styles/SubmittedData.css';
+import IndexedDBManager from '../utils/IndexedDBManager.js';
+import '../styles/SubmittedData.css';
 
 // ✅ Entry Details Modal Component - ENHANCED WITH COMPLETE DATA & FIXES
 const EntryDetailsModal = memo(({

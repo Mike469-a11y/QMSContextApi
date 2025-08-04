@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/Assignment.css";
+import "../styles/Assignment.css";
 
 const Assignment = () => {
     const [entries, setEntries] = useState([]);
