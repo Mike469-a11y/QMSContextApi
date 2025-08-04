@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import CreditBalanceOverview from '../shared/CreditBalanceOverview';
-import OrderTracker from '../shared/OrderTracker';
+import CreditBalanceOverview from '../ui/CreditBalanceOverview';
+import OrderTracker from '../ui/OrderTracker';
 import '../../styles/Execution.css';
 
 const Execution = () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import IndexedDBManager from '../../utils/IndexedDBManager';
+import IndexedDBManager from '../../utils/IndexedDBManager.js';
 import '../../styles/OrderTracker.css';
 
 const OrderTracker = ({ onBack, currentUser, currentDateTime }) => {
