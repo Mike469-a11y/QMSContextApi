@@ -1,4 +1,4 @@
-import api from './client.js';
+import qmsService from './qmsService.js';
 
 // QMS Entry related API calls
 export const qmsService = {

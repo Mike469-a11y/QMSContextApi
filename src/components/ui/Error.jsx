@@ -84,6 +84,93 @@ const ErrorPage = ({
   );
 };
 
+// React Query specific error component
+const QueryErrorMessage = ({ query, onRetry, title = 'Failed to load data' }) => {
+  if (!query.isError) return null;
+  
+  return (
+    <ErrorMessage
+      error={query.error}
+      title={title}
+      onRetry={onRetry || query.refetch}
+    />
+  );
+};
+
+// React Query error boundary
+const QueryErrorBoundary = ({ 
+  query, 
+  fallback = null, 
+  title = 'Failed to load data',
+  showRetry = true 
+}) => {
+  if (query.isError) {
+    return (
+      <div className="p-4">
+        <QueryErrorMessage 
+          query={query} 
+          title={title}
+          onRetry={showRetry ? query.refetch : null}
+        />
+      </div>
+    );
+  }
+  
+  return fallback;
+};
+
+// Network status error component
+const NetworkError = ({ onRetry, className = '' }) => {
+  return (
+    <div className={`bg-yellow-50 border border-yellow-200 rounded-lg p-4 ${className}`}>
+      <div className="flex items-start">
+        <div className="flex-shrink-0">
+          <svg className="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div className="ml-3 flex-1">
+          <h3 className="text-sm font-medium text-yellow-800">Connection Problem</h3>
+          <div className="mt-2 text-sm text-yellow-700">
+            <p>Unable to connect to the server. Please check your internet connection.</p>
+          </div>
+          {onRetry && (
+            <div className="mt-4">
+              <button
+                onClick={onRetry}
+                className="bg-yellow-100 px-3 py-2 rounded-md text-sm font-medium text-yellow-800 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+              >
+                Retry
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 404 Error component
+const NotFoundError = ({ onGoHome, message = 'The page you are looking for does not exist.' }) => {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full text-center">
+        <div className="text-6xl font-bold text-gray-400 mb-4">404</div>
+        <h1 className="text-xl font-semibold text-gray-900 mb-2">Page Not Found</h1>
+        <p className="text-sm text-gray-600 mb-6">{message}</p>
+        {onGoHome && (
+          <button
+            onClick={onGoHome}
+            className="bg-blue-600 px-4 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Go Home
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const ErrorBoundary = class extends React.Component {
   constructor(props) {
     super(props);
@@ -114,5 +201,13 @@ const ErrorBoundary = class extends React.Component {
   }
 };
 
-export { ErrorMessage, ErrorPage, ErrorBoundary };
+export { 
+  ErrorMessage, 
+  ErrorPage, 
+  ErrorBoundary,
+  QueryErrorMessage,
+  QueryErrorBoundary,
+  NetworkError,
+  NotFoundError
+};
 export default ErrorMessage;
